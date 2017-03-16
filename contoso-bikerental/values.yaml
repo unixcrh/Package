@@ -2,7 +2,7 @@
 # Declare variables to be passed into your templates.
 
 contoso-bikerental-gateway:
-  serviceType: LoadBalancer
+  serviceType: ClusterIP
   replicaCount: 1
   image:
     repository: stevenryregistry-microsoft.azurecr.io
