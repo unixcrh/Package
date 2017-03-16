@@ -14,12 +14,23 @@ contoso-bikerental-bikes:
     connectionString: <insert connection string here>
 
 contoso-bikerental-gateway:
+  serviceType: LoadBalancer
   replicaCount: 1
   image:
     repository: stevenryregistry-microsoft.azurecr.io
     tag: latest
     pullPolicy: Always
     repoCredsSecretName: myregistrykey
+  dependencies:
+    users:
+      dnsName: {{ .Release.Name }}-contoso-bikerental-users
+    bikes:
+      dnsName: {{ .Release.Name }}-contoso-bikerental-bikes
+    serviceBus:
+      namespace: dummynamespaceurl
+      policy: dummypolicyname
+      key: dummykey
+      queue: dummyqueuename
 
 contoso-bikerental-reservationengine:
   replicaCount: 1
