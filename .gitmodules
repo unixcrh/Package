@@ -7,3 +7,6 @@
 [submodule "Gateway"]
 	path = Gateway
 	url = https://github.com/ContosoBikeRental/Gateway.git
+[submodule "Users"]
+	path = Users
+	url = https://github.com/ContosoBikeRental/Users.git
