@@ -1,17 +1,5 @@
-# Default values for contoso.bikerental.bikes.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-
-contoso-bikerental-bikes:
-  replicaCount: 1
-  image:
-    repository: stevenryregistry-microsoft.azurecr.io
-    tag: latest
-    pullPolicy: Always
-    repoCredsSecretName: myregistrykey
-  mongo:
-    collection: bikes
-    connectionString: <insert connection string here>
 
 contoso-bikerental-gateway:
   serviceType: LoadBalancer
@@ -32,6 +20,17 @@ contoso-bikerental-gateway:
       key: dummykey
       queue: dummyqueuename
 
+contoso-bikerental-bikes:
+  replicaCount: 1
+  image:
+    repository: stevenryregistry-microsoft.azurecr.io
+    tag: latest
+    pullPolicy: Always
+    repoCredsSecretName: myregistrykey
+  mongo:
+    collection: bikes
+    connectionString: <insert connection string here>
+
 contoso-bikerental-reservationengine:
   replicaCount: 1
   image:
@@ -39,3 +38,30 @@ contoso-bikerental-reservationengine:
     tag: latest
     pullPolicy: Always
     repoCredsSecretName: myregistrykey
+  dependencies:
+    serviceBus:
+      namespace: dummynamespaceurl
+      policy: dummypolicyname
+      key: dummykey
+      queue: dummyqueuename
+    bikes:
+      dnsName: {{ .Release.Name }}-contoso-bikerental-bikes
+    reservation:
+      mongo:
+        connectionString: dummymongoconnection
+        collection: dummymongocollection
+        database: dummymongodb
+
+contoso-bikerental-users:
+  replicaCount: 1
+  image:
+    repository: stevenryregistry-microsoft.azurecr.io
+    tag: latest
+    pullPolicy: Always
+    repoCredsSecretName: myregistrykey
+  dependencies:
+    sql:
+      username: dummyuser
+      password: dummypassword
+      server: dummyserver
+      database: dummydatabase
