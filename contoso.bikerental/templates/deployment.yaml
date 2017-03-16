@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+    spec:
+      imagePullSecrets:
+        - name: {{ .Values.image.repoCredsSecretName }}
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}/contoso-bikerental-bikes:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+          - containerPort: 80
+        env:
+          - name: MONGO_DB_COLLECTION
+            value: {{ .Values.mongo.collection }}
+          - name: MONGO_DB_CONNECTION_STRING
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "fullname" . }}
+                key: mongo-connection-string
+        livenessProbe:
+          httpGet:
+            path: /hello
+            port: 80
+        readinessProbe:
+          httpGet:
+            path: /hello
+            port: 80
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
