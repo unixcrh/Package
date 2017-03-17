@@ -33,7 +33,7 @@ services:
             - MONGO_DB_CONNECTION_STRING=<insert connection string here>
             - MONGO_DB_COLLECTION=bikes
         ports:
-            - "80"
+            - "8081:80"
 
     reservationengine:
         build: ./ReservationEngine/app/
@@ -54,7 +54,7 @@ services:
     users:
         build: ./Users/app/
         ports:
-            - "80"
+            - "8082:80"
         environment:
             - USER_SQLDB_USERNAME=dummyuser
             - USER_SQLDB_PASSWORD=dummypassword
