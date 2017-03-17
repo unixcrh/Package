@@ -4,3 +4,4 @@ cp -R Bikes/contoso-bikerental-bikes/. contoso-bikerental/charts/contoso-bikeren
 cp -R Gateway/contoso-bikerental-gateway/. contoso-bikerental/charts/contoso-bikerental-gateway/
 cp -R ReservationEngine/contoso-bikerental-reservationengine/. contoso-bikerental/charts/contoso-bikerental-reservationengine/
 cp -R Users/contoso-bikerental-users/. contoso-bikerental/charts/contoso-bikerental-users/
+cp -R DevSite/contoso-bikerental-devsite/. contoso-bikerental/charts/contoso-bikerental-devsite/

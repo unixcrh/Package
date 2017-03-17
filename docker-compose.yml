@@ -4,7 +4,7 @@ services:
     apigateway:
         build: ./Gateway/app/
         ports:
-            - "5000:5000"
+            - "5000"
         environment:
             - AZURE_SERVICE_BUS_NAMESPACE=dummynamespaceurl
             - AZURE_SERVICE_BUS_POLICY=dummypolicyname
@@ -19,6 +19,13 @@ services:
             - bikes
             - reservationengine
             - users
+
+    devsite:
+        build: ./DevSite/
+        environment:
+        - GATEWAY_SERVICE_URI=http://apigateway
+        ports:
+        - "8080:80"
 
     bikes:
         build: ./Bikes/
