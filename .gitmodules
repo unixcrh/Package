@@ -10,3 +10,6 @@
 [submodule "Users"]
 	path = Users
 	url = https://github.com/ContosoBikeRental/Users.git
+[submodule "DevSite"]
+	path = DevSite
+	url = https://github.com/ContosoBikeRental/DevSite.git
