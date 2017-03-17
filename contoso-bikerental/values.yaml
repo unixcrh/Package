@@ -11,9 +11,9 @@ contoso-bikerental-gateway:
     repoCredsSecretName: myregistrykey
   dependencies:
     users:
-      dnsName: {{ .Release.Name }}-contoso-bikerental-users
+      dnsName: contoso-bikerental-users
     bikes:
-      dnsName: {{ .Release.Name }}-contoso-bikerental-bikes
+      dnsName: contoso-bikerental-bikes
     serviceBus:
       namespace: dummynamespaceurl
       policy: dummypolicyname
@@ -45,12 +45,12 @@ contoso-bikerental-reservationengine:
       key: dummykey
       queue: dummyqueuename
     bikes:
-      dnsName: {{ .Release.Name }}-contoso-bikerental-bikes
+      dnsName: contoso-bikerental-bikes
     reservation:
       mongo:
         connectionString: dummymongoconnection
-        collection: dummymongocollection
-        database: dummymongodb
+        collection: reservations
+        database: reservationengine
 
 contoso-bikerental-users:
   replicaCount: 1
@@ -64,4 +64,4 @@ contoso-bikerental-users:
       username: dummyuser
       password: dummypassword
       server: dummyserver
-      database: dummydatabase
+      database: BikeSharingUsers
