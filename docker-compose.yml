@@ -23,9 +23,13 @@ services:
     devsite:
         build: ./DevSite/
         environment:
-        - GATEWAY_SERVICE_URI=http://apigateway
+            - GATEWAY_SERVICE_URI=http://apigateway:5000
+        links:
+            - apigateway
+        depends_on:
+            - apigateway
         ports:
-        - "8080:80"
+            - "8080:80"
 
     bikes:
         build: ./Bikes/
