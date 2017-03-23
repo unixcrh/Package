@@ -13,3 +13,12 @@
 [submodule "DevSite"]
 	path = DevSite
 	url = https://github.com/ContosoBikeRental/DevSite.git
+[submodule "Billing"]
+	path = Billing
+	url = http://github.com/contosobikerental/Billing
+[submodule "Notification"]
+	path = Notification
+	url = http://github.com/contosobikerental/Notification
+[submodule "Reservation"]
+	path = Reservation
+	url = http://github.com/contosobikerental/Reservation
