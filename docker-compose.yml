@@ -6,19 +6,23 @@ services:
         ports:
             - "5000"
         environment:
-            - AZURE_SERVICE_BUS_NAMESPACE=dummynamespaceurl
-            - AZURE_SERVICE_BUS_POLICY=dummypolicyname
+            - AZURE_SERVICE_BUS_NAMESPACE=dummynamespace
+            - AZURE_SERVICE_BUS_POLICY=dummypolicy
             - AZURE_SERVICE_BUS_KEY=dummykey
-            - AZURE_SERVICE_BUS_QUEUE=dummyqueuename
+            - AZURE_SERVICE_BUS_QUEUE=dummyqueue
             - USERS_SERVICE=users
             - BIKES_SERVICE=bikes
         links:
             - bikes
             - users
+            - billing
+            - reservation
         depends_on:
             - bikes
             - reservationengine
             - users
+            - billing
+            - reservation
 
     devsite:
         build: ./DevSite/
@@ -34,26 +38,14 @@ services:
     bikes:
         build: ./Bikes/
         environment:
-            - MONGO_DB_CONNECTION_STRING=<insert connection string here>
+            - MONGO_DB_CONNECTION_STRING=mongodb://mongo
             - MONGO_DB_COLLECTION=bikes
+        depends_on:
+            - mongo
+        links:
+            - mongo
         ports:
             - "8081:80"
-
-    reservationengine:
-        build: ./ReservationEngine/app/
-        environment:
-            - AZURE_SERVICE_BUS_NAMESPACE=dummynamespaceurl
-            - AZURE_SERVICE_BUS_POLICY=dummypolicyname
-            - AZURE_SERVICE_BUS_KEY=dummykey
-            - AZURE_SERVICE_BUS_QUEUE=dummyqueuename
-            - BIKES_SERVICE=bikes
-            - RESERVATION_MONGODB_CONNECTION_STRING=dummymongoconnection
-            - RESERVATION_MONGODB_DATABASE=dummymongodb
-            - RESERVATION_MONGODB_COLLECTION=dummymongocollection
-        depends_on:
-            - bikes
-        links:
-            - bikes
 
     users:
         build: ./Users/app/
@@ -62,5 +54,83 @@ services:
         environment:
             - USER_SQLDB_USERNAME=dummyuser
             - USER_SQLDB_PASSWORD=dummypassword
-            - USER_SQLDB_SERVER=dummydbserver
+            - USER_SQLDB_SERVER=dummyserver
             - USER_SQLDB_DATABASE=dummydb
+
+    billing:
+        build: ./Billing/
+        ports:
+            - "8083:8080"
+        environment:
+            - MONGODB_CONNECTION_STRING=mongodb://mongo
+            - MONGODB_DBNAME=billing
+        depends_on:
+            - mongo
+        links:
+            - mongo
+
+    reservation:
+        build: ./Reservation/app/
+        ports:
+            - "8084:80"
+        environment:
+            - RESERVATION_MONGODB_CONNECTION_STRING=mongodb://mongo
+            - RESERVATION_MONGODB_DATABASE=resdb
+            - RESERVATION_MONGODB_COLLECTION=reservation
+        depends_on:
+            - mongo
+        links:
+            - mongo
+
+    reservationengine:
+        build: ./ReservationEngine/app/
+        environment:
+            - AZURE_SERVICE_BUS_NAMESPACE=dummynamespace
+            - AZURE_SERVICE_BUS_POLICY=dummypolicy
+            - AZURE_SERVICE_BUS_KEY=dummykey
+            - AZURE_SERVICE_BUS_QUEUE=dummyqueue
+            - BIKES_SERVICE=bikes
+            - RESERVATION_MONGODB_CONNECTION_STRING=mongodb://mongo
+            - RESERVATION_MONGODB_DATABASE=resdb
+            - RESERVATION_MONGODB_COLLECTION=reservation
+        depends_on:
+            - bikes
+            - mongo
+            - notification
+            - billing
+            - reservation
+        links:
+            - bikes
+            - mongo
+            - reservation
+            - billing
+            - notification
+
+    notification:
+        build: ./Notification/
+        environment:
+            - OUT_AMQP_URI=amqp://rabbit
+            - IN_AMQP_URI=amqp://rabbit
+            - OUT_EXCHANGE=out
+            - IN_EXCHANGE=in
+            - IN_BINDINGKEY=
+            - CONSUMERTAG_OVERRIDE=
+        depends_on:
+            - rabbit
+        links:
+            - rabbit
+
+    mongo:
+        image: mongo:3.4
+        expose:
+            - "27017"
+        ports:
+            - "27017:27017"
+
+    rabbit:
+        image: rabbitmq:3-management
+        expose:
+            - "5672"
+        ports:
+            - "5672:5672"
+            - "15672:15672"
