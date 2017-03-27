@@ -12,17 +12,19 @@ services:
             - AZURE_SERVICE_BUS_QUEUE=dummyqueue
             - USERS_SERVICE=users
             - BIKES_SERVICE=bikes
+            - RESERVATIONS_SERVICE=reservations
+            - BILLING_SERVICE=billing
         links:
             - bikes
             - users
             - billing
-            - reservation
+            - reservations
         depends_on:
             - bikes
             - reservationengine
             - users
             - billing
-            - reservation
+            - reservations
 
     devsite:
         build: ./DevSite/
@@ -69,7 +71,7 @@ services:
         links:
             - mongo
 
-    reservation:
+    reservations:
         build: ./Reservation/app/
         ports:
             - "8084:80"
@@ -89,20 +91,21 @@ services:
             - AZURE_SERVICE_BUS_POLICY=dummypolicy
             - AZURE_SERVICE_BUS_KEY=dummykey
             - AZURE_SERVICE_BUS_QUEUE=dummyqueue
-            - BIKES_SERVICE=bikes
             - RESERVATION_MONGODB_CONNECTION_STRING=mongodb://mongo
             - RESERVATION_MONGODB_DATABASE=resdb
             - RESERVATION_MONGODB_COLLECTION=reservation
+            - BIKES_SERVICE=bikes
+            - BILLING_SERVICE=billing
         depends_on:
             - bikes
             - mongo
             - notification
             - billing
-            - reservation
+            - reservations
         links:
             - bikes
             - mongo
-            - reservation
+            - reservations
             - billing
             - notification
 
