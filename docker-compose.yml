@@ -4,7 +4,7 @@ services:
     apigateway:
         build: ./Gateway/app/
         ports:
-            - "5000"
+            - "5000:5000"
         environment:
             - AZURE_SERVICE_BUS_NAMESPACE=dummynamespace
             - AZURE_SERVICE_BUS_POLICY=dummypolicy
