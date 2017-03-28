@@ -19,3 +19,6 @@
 [submodule "Reservation"]
 	path = Reservation
 	url = http://github.com/contosobikerental/Reservation
+[submodule "ReservationEngine"]
+	path = ReservationEngine
+	url = https://github.com/ContosoBikeRental/ReservationEngine.git
