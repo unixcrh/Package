@@ -6,10 +6,8 @@ services:
         ports:
             - "5000:5000"
         environment:
-            - AZURE_SERVICE_BUS_NAMESPACE=dummynamespace
-            - AZURE_SERVICE_BUS_POLICY=dummypolicy
-            - AZURE_SERVICE_BUS_KEY=dummykey
-            - AZURE_SERVICE_BUS_QUEUE=dummyqueue
+            - AZURE_SERVICE_BUS_CONNECTIONSTRING=amqp://admin:admin@servicebus
+            - AZURE_SERVICE_BUS_QUEUE=testqueue
             - USERS_SERVICE=users
             - BIKES_SERVICE=bikes
             - RESERVATIONS_SERVICE=reservations
@@ -19,12 +17,14 @@ services:
             - users
             - billing
             - reservations
+            - servicebus
         depends_on:
             - bikes
             - reservationengine
             - users
             - billing
             - reservations
+            - servicebus
 
     devsite:
         build: ./DevSite/
@@ -63,6 +63,8 @@ services:
         build: ./Billing/
         ports:
             - "8083:8080"
+        expose:
+            - "8080"
         environment:
             - MONGODB_CONNECTION_STRING=mongodb://mongo
             - MONGODB_DBNAME=billing
@@ -102,12 +104,14 @@ services:
             - notification
             - billing
             - reservations
+            - servicebus
         links:
             - bikes
             - mongo
             - reservations
             - billing
             - notification
+            - servicebus
 
     notification:
         build: ./Notification/
@@ -136,4 +140,12 @@ services:
             - "5672"
         ports:
             - "5672:5672"
-            - "15672:15672"
+            - "15672:15672"  # WebUI
+
+    servicebus:
+        image: rmohr/activemq:5.14.3
+        expose:
+            - "5672"
+        ports:
+            - "8161:8161"  # WebUI
+            - "56721:5672"
