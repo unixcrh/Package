@@ -1,24 +1,32 @@
 [submodule "Bikes"]
 	path = Bikes
 	url = https://github.com/ContosoBikeRental/Bikes.git
+	branch = master
 [submodule "Gateway"]
 	path = Gateway
 	url = https://github.com/ContosoBikeRental/Gateway.git
+	branch = master
 [submodule "Users"]
 	path = Users
 	url = https://github.com/ContosoBikeRental/Users.git
+	branch = master
 [submodule "DevSite"]
 	path = DevSite
 	url = https://github.com/ContosoBikeRental/DevSite.git
+	branch = master
 [submodule "Billing"]
 	path = Billing
 	url = http://github.com/contosobikerental/Billing
+	branch = master
 [submodule "Notification"]
 	path = Notification
 	url = http://github.com/contosobikerental/Notification
+	branch = master
 [submodule "Reservation"]
 	path = Reservation
 	url = http://github.com/contosobikerental/Reservation
+	branch = master
 [submodule "ReservationEngine"]
 	path = ReservationEngine
 	url = https://github.com/ContosoBikeRental/ReservationEngine.git
+	branch = master
