@@ -89,15 +89,13 @@ services:
     reservationengine:
         build: ./ReservationEngine/app/
         environment:
-            - AZURE_SERVICE_BUS_NAMESPACE=dummynamespace
-            - AZURE_SERVICE_BUS_POLICY=dummypolicy
-            - AZURE_SERVICE_BUS_KEY=dummykey
-            - AZURE_SERVICE_BUS_QUEUE=dummyqueue
+            - AZURE_SERVICE_BUS_CONNECTIONSTRING=amqp://admin:admin@servicebus
+            - AZURE_SERVICE_BUS_QUEUE=testqueue
             - RESERVATION_MONGODB_CONNECTION_STRING=mongodb://mongo
             - RESERVATION_MONGODB_DATABASE=resdb
             - RESERVATION_MONGODB_COLLECTION=reservation
             - BIKES_SERVICE=bikes
-            - BILLING_SERVICE=billing
+            - BILLING_SERVICE=billing:8080
         depends_on:
             - bikes
             - mongo
