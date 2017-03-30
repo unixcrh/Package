@@ -8,6 +8,8 @@ services:
         environment:
             - AZURE_SERVICE_BUS_CONNECTIONSTRING=amqp://admin:admin@servicebus
             - AZURE_SERVICE_BUS_QUEUE=testqueue
+            - NOTIFICATION_AMQP_URI=amqp://rabbit
+            - NOTIFICATION_OUT_EXCHANGE_NAME=out
             - USERS_SERVICE=users
             - BIKES_SERVICE=bikes
             - RESERVATIONS_SERVICE=reservations
@@ -54,10 +56,15 @@ services:
         ports:
             - "8082:80"
         environment:
-            - USER_SQLDB_USERNAME=dummyuser
-            - USER_SQLDB_PASSWORD=dummypassword
-            - USER_SQLDB_SERVER=dummyserver
-            - USER_SQLDB_DATABASE=dummydb
+            - USER_SQLDB_USERNAME=SA
+            - USER_SQLDB_PASSWORD=!DummyPassword123!
+            - USER_SQLDB_SERVER=sql
+            - USER_SQLDB_DATABASE=tempdb
+            - USER_SQLDB_TABLE=dummytable
+        depends_on:
+            - sql
+        links:
+            - sql
 
     billing:
         build: ./Billing/
@@ -94,6 +101,9 @@ services:
             - RESERVATION_MONGODB_CONNECTION_STRING=mongodb://mongo
             - RESERVATION_MONGODB_DATABASE=resdb
             - RESERVATION_MONGODB_COLLECTION=reservation
+            - NOTIFICATION_AMQP_URI=amqp://rabbit
+            - NOTIFICATION_IN_EXCHANGE_NAME=in
+            - NOTIFICATION_ROUTING_KEY=reservation
             - BIKES_SERVICE=bikes
             - BILLING_SERVICE=billing:8080
         depends_on:
@@ -118,7 +128,7 @@ services:
             - IN_AMQP_URI=amqp://rabbit
             - OUT_EXCHANGE=out
             - IN_EXCHANGE=in
-            - IN_BINDINGKEY=
+            - IN_BINDINGKEY=reservation
             - CONSUMERTAG_OVERRIDE=
         depends_on:
             - rabbit
@@ -147,3 +157,11 @@ services:
         ports:
             - "8161:8161"  # WebUI
             - "56721:5672"
+
+    sql:
+        image: "microsoft/mssql-server-linux"
+        expose:
+            - "1433"
+        environment:
+            - SA_PASSWORD=!DummyPassword123!
+            - ACCEPT_EULA=Y
