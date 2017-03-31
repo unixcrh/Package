@@ -13,7 +13,7 @@ services:
             - USERS_SERVICE=users
             - BIKES_SERVICE=bikes
             - RESERVATIONS_SERVICE=reservations
-            - BILLING_SERVICE=billing
+            - BILLING_SERVICE=billing:8080
         links:
             - bikes
             - users
