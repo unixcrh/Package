@@ -1,8 +1,8 @@
-{{- if .Values.hostedRabbit.enabled }}
+{{- if .Values.hostedServiceBus.enabled }}
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "fullname" . }}-rabbit
+  name: {{ template "fullname" . }}-servicebus
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 spec:
@@ -10,20 +10,20 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "fullname" . }}-rabbit
+        app: {{ template "fullname" . }}-servicebus
     spec:
       containers:
-      - name: {{ .Chart.Name }}-rabbit
-        image: "rabbitmq:3-management"
+      - name: {{ .Chart.Name }}-servicebus
+        image: "rmohr/activemq:5.14.3"
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 5672
-          - containerPort: 15672
+          - containerPort: 8161
         resources:
           limits:
             cpu: 100m
-            memory: 128Mi
+            memory: 3Gi
           requests:
             cpu: 100m
-            memory: 128Mi
+            memory: 3Gi
 {{- end -}}

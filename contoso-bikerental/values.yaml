@@ -1,9 +1,19 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+hostedSql:
+  enabled: true
+  password: "!DummyPassword123!"
+hostedRabbit:
+  enabled: true
+hostedMongo:
+  enabled: true
+hostedServiceBus:
+  enabled: true
+
 contoso-bikerental-devsite:
   serviceType: LoadBalancer
-  replicaCount: 1
+  replicaCount: 2
   image:
     repository: stevenryregistry-microsoft.azurecr.io
     tag: latest
@@ -15,7 +25,7 @@ contoso-bikerental-devsite:
 
 contoso-bikerental-gateway:
   serviceType: ClusterIP
-  replicaCount: 1
+  replicaCount: 2
   image:
     repository: stevenryregistry-microsoft.azurecr.io
     tag: latest
@@ -34,13 +44,13 @@ contoso-bikerental-gateway:
       connectionString: amqp://<>-contoso-bikerental-rabbit
       exchangeName: out
     serviceBus:
-      connectionString: dummy
+      connectionString: amqp://admin:admin@<>-contoso-bikerental-servicebus
       queue: testqueue
     applicationInsights:
-      instrumentationKey: dummy
+      instrumentationKey: 00000000-0000-0000-0000-000000000000
 
 contoso-bikerental-bikes:
-  replicaCount: 1
+  replicaCount: 2
   image:
     repository: stevenryregistry-microsoft.azurecr.io
     tag: latest
@@ -48,10 +58,10 @@ contoso-bikerental-bikes:
     repoCredsSecretName: myregistrykey
   mongo:
     collection: bikes
-    connectionString: dummy
+    connectionString: mongodb://<>-contoso-bikerental-mongo
 
 contoso-bikerental-reservationengine:
-  replicaCount: 1
+  replicaCount: 2
   image:
     repository: stevenryregistry-microsoft.azurecr.io
     tag: latest
@@ -59,7 +69,7 @@ contoso-bikerental-reservationengine:
     repoCredsSecretName: myregistrykey
   dependencies:
     serviceBus:
-      connectionString: dummy
+      connectionString: amqp://admin:admin@<>-contoso-bikerental-servicebus
       queue: testqueue
     bikes:
       dnsName: contoso-bikerental-bikes
@@ -70,12 +80,12 @@ contoso-bikerental-reservationengine:
       exchangeName: in
       routingKey: reservation
     mongo:
-      connectionString: dummy
+      connectionString: mongodb://<>-contoso-bikerental-mongo
       dbName: resdb
       collection: reservation
 
 contoso-bikerental-users:
-  replicaCount: 1
+  replicaCount: 2
   image:
     repository: stevenryregistry-microsoft.azurecr.io
     tag: latest
@@ -83,37 +93,37 @@ contoso-bikerental-users:
     repoCredsSecretName: myregistrykey
   dependencies:
     sql:
-      username: dummy
-      password: dummy
-      server: dummy
-      database: BikeSharingUsers
+      username: SA
+      password: "!DummyPassword123!"
+      server: <>-contoso-bikerental-sql
+      database: tempdb
       table: myTable
 
 contoso-bikerental-reservations:
-  replicaCount: 1
+  replicaCount: 2
   image:
     repository: stevenryregistry-microsoft.azurecr.io
     tag: latest
     pullPolicy: Always
     repoCredsSecretName: myregistrykey
   mongo:
-    connectionString: dummy
+    connectionString: mongodb://<>-contoso-bikerental-mongo
     dbName: resdb
     collection: reservation
 
 contoso-bikerental-billing:
-  replicaCount: 1
+  replicaCount: 2
   image:
     repository: stevenryregistry-microsoft.azurecr.io
     tag: latest
     pullPolicy: Always
     repoCredsSecretName: myregistrykey
   mongo:
-    connectionString: dummy
+    connectionString: mongodb://<>-contoso-bikerental-mongo
     dbName: billing
 
 contoso-bikerental-notification:
-  replicaCount: 1
+  replicaCount: 2
   image:
     repository: stevenryregistry-microsoft.azurecr.io
     tag: latest

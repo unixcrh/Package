@@ -1,0 +1,17 @@
+{{- if .Values.hostedServiceBus.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "fullname" . }}-servicebus
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  type: ClusterIP
+  ports:
+  - port: 5672
+    targetPort: 5672
+    protocol: TCP
+    name: servicebus
+  selector:
+    app: {{ template "fullname" . }}-servicebus
+{{- end -}}

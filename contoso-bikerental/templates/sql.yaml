@@ -1,0 +1,36 @@
+{{- if .Values.hostedSql.enabled }}
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}-sql
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}-sql
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}-sql
+        image: "microsoft/mssql-server-linux"
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: ACCEPT_EULA
+            value: "Y"
+          - name: SA_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "fullname" . }}-sql
+                key: sql-password
+        ports:
+          - containerPort: 1433
+        resources:
+          limits:
+            cpu: 100m
+            memory: 4Gi
+          requests:
+            cpu: 100m
+            memory: 4Gi
+{{- end -}}

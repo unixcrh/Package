@@ -1,3 +1,4 @@
+{{- if .Values.hostedRabbit.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -17,3 +18,4 @@ spec:
     name: webui
   selector:
     app: {{ template "fullname" . }}-rabbit
+{{- end -}}
