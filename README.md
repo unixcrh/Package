@@ -33,8 +33,9 @@ Linux:
 ./build_tag_push.sh <private repo hostname> <tag>
 
 Windows:
-.\build_tag_push.bat <private repo hostname <tag>
+.\build_tag_push.bat <private repo hostname> <tag>
 ```
+_IMPORTANT: You must also configure the appropriate private repo and tag in the `values.yaml`, so that each microservice is configured to pull from the correct repo._
 
 Once `kubectl` and `helm` have been installed/configured, all images have been pushed, and all charts are in their correct locations, you can deploy the service to your cluster by simply executing:
 ```
